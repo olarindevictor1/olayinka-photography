@@ -1,0 +1,3112 @@
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Settings | Olayinka Photography</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #111;
+      color: #f5f2ea;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    header {
+      background: #181818;
+      border-bottom: 1px solid #2d2d2d;
+      padding: 18px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #111;
+      background: #d4af37;
+      padding: 10px 17px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 35px 0 80px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Georgia, serif;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    .intro {
+      color: #aaa69e;
+      margin-bottom: 35px;
+    }
+
+    .section {
+      background: #181818;
+      border: 1px solid #2c2c2c;
+      border-radius: 14px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .section h2 {
+      color: #d4af37;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .section-description {
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .subsection {
+      border-top: 1px solid #2b2b2b;
+      padding-top: 22px;
+      margin-top: 25px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+      color: #eee;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      color: #ddd;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #393939;
+      background: #101010;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #d4af37;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .small-textarea {
+      min-height: 85px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 11px 18px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: #d4af37;
+      color: #111;
+    }
+
+    .secondary {
+      background: #292929;
+      color: #fff;
+    }
+
+    .danger {
+      background: #8f2d2d;
+      color: #fff;
+    }
+
+    .success {
+      background: #285c3a;
+      color: #fff;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success-message {
+      background: #173b26;
+      color: #a9e6bd;
+    }
+
+    .message.error-message {
+      background: #421d1d;
+      color: #ffb4b4;
+    }
+
+    .content-card {
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .content-card h3 {
+      color: #d4af37;
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+
+    .content-key {
+      color: #666;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .package-card {
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .package-card h3 {
+      margin: 0 0 8px;
+      color: #d4af37;
+    }
+
+    .package-price {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .package-meta {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .feature-list {
+      color: #aaa;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: #245b37;
+      color: #a9e6bd;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .status.off {
+      background: #4a2929;
+      color: #ffb4b4;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .check-row input {
+      width: auto;
+    }
+
+    .loading {
+      color: #999;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .notice {
+      background: #211f16;
+      border: 1px solid #4a4020;
+      color: #cfc39a;
+      padding: 13px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .header-inner {
+        align-items: flex-start;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-inner">
+
+    <div class="brand">
+      <img
+        src="../../Assets/IMG-20260924-WA0031.jpg"
+        alt="Olayinka Photography"
+        onerror="this.style.display='none'"
+      >
+      <span>OLAYINKA PHOTOGRAPHY</span>
+    </div>
+
+    <a href="../index.html" class="back-btn">
+      ← Dashboard
+    </a>
+
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <h1>Settings</h1>
+
+    <p class="intro">
+      Manage your business information, website content, social links,
+      booking settings and service packages.
+    </p>
+
+    <div id="message" class="message"></div>
+
+
+    <!-- =========================================================
+         BUSINESS INFORMATION
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Business Information</h2>
+
+      <p class="section-description">
+        These details are used throughout the website and booking system.
+      </p>
+
+      <div class="grid">
+
+        <div class="field">
+          <label for="businessName">Business Name</label>
+          <input id="businessName" type="text">
+        </div>
+
+        <div class="field">
+          <label for="businessEmail">Business Email</label>
+          <input id="businessEmail" type="email">
+        </div>
+
+        <div class="field">
+          <label for="businessPhone">Business Phone</label>
+          <input id="businessPhone" type="text">
+        </div>
+
+        <div class="field">
+          <label for="whatsappNumber">WhatsApp Number</label>
+          <input id="whatsappNumber" type="text">
+        </div>
+
+        <div class="field full">
+          <label for="address">Business Address</label>
+          <input id="address" type="text">
+        </div>
+
+        <div class="field full">
+          <label for="businessHours">Business Hours</label>
+          <textarea
+            id="businessHours"
+            class="small-textarea"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <button class="primary" id="saveBusinessBtn">
+        Save Business Information
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         BOOKING SETTINGS
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Booking Settings</h2>
+
+      <p class="section-description">
+        Control default booking and payment information.
+      </p>
+
+      <div class="grid">
+
+        <div class="field">
+          <label for="depositPercentage">
+            Deposit Percentage
+          </label>
+          <input
+            id="depositPercentage"
+            type="number"
+            min="0"
+            max="100"
+          >
+        </div>
+
+        <div class="field">
+          <label for="defaultDuration">
+            Default Duration
+          </label>
+          <input
+            id="defaultDuration"
+            type="text"
+            placeholder="e.g. 2 hours"
+          >
+        </div>
+
+        <div class="field full">
+          <label for="paymentInstructions">
+            Payment Instructions
+          </label>
+          <textarea
+            id="paymentInstructions"
+            placeholder="Enter payment instructions shown to customers..."
+          ></textarea>
+        </div>
+
+      </div>
+
+      <button class="primary" id="saveBookingBtn">
+        Save Booking Settings
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         SOCIAL LINKS
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Social Links</h2>
+  </p>
+
+      <div class="grid">
+
+        <div class="field">
+          <label for="instagram">Instagram</label>
+          <input id="instagram" type="url">
+        </div>
+
+        <div class="field">
+          <label for="facebook">Facebook</label>
+          <input id="facebook" type="url">
+        </div>
+
+        <div class="field">
+          <label for="tiktok">TikTok</label>
+          <input id="tiktok" type="url">
+        </div>
+
+        <div class="field">
+          <label for="website">Website</label>
+          <input id="website" type="url">
+        </div>
+
+      </div>
+
+      <button class="primary" id="saveSocialBtn">
+        Save Social Links
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         BRAND ASSETS
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Brand Assets</h2>
+
+      <p class="section-description">
+        Store the URLs or Supabase Storage paths for your logo and
+        photographer photo.
+      </p>
+
+      <div class="grid">
+
+        <div class="field">
+          <label for="logoUrl">Logo URL</label>
+          <input id="logoUrl" type="text">
+        </div>
+
+        <div class="field">
+          <label for="logoStoragePath">Logo Storage Path</label>
+          <input id="logoStoragePath" type="text">
+        </div>
+
+        <div class="field">
+          <label for="photographerPhotoUrl">
+            Photographer Photo URL
+          </label>
+          <input id="photographerPhotoUrl" type="text">
+        </div>
+
+        <div class="field">
+          <label for="photographerPhotoStoragePath">
+            Photographer Photo Storage Path
+          </label>
+          <input id="photographerPhotoStoragePath" type="text">
+        </div>
+
+      </div>
+
+      <button class="primary" id="saveAssetsBtn">
+        Save Brand Assets
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         WEBSITE CONTENT
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Website Content</h2>
+
+      <p class="section-description">
+        Edit the words that appear on the public website.
+        Changes are saved to your existing website content system.
+      </p>
+
+      <div class="notice">
+        Service names and service descriptions are managed separately
+        from <strong>Admin → Services</strong>.
+      </div>
+
+      <div id="websiteContentContainer">
+        <div class="loading">
+          Loading website content...
+        </div>
+      </div>
+
+      <button class="primary" id="saveWebsiteContentBtn">
+        Save Website Content
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         LEGAL + FAQ
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Legal & Other Content</h2>
+
+      <p class="section-description">
+        Manage your FAQ, Terms & Conditions and Privacy Policy.
+      </p>
+
+      <div id="legalContentContainer">
+        <div class="loading">
+          Loading...
+        </div>
+      </div>
+
+      <button class="primary" id="saveLegalBtn">
+        Save Legal & FAQ Content
+      </button>
+
+    </section>
+
+
+    <!-- =========================================================
+         SERVICE PACKAGES
+    ========================================================== -->
+
+    <section class="section">
+
+      <h2>Service Packages</h2>
+
+      <p class="section-description">
+        Create and manage packages connected to your photography services.
+      </p>
+
+
+      <div class="subsection">
+
+        <h3 id="packageFormTitle">
+          Add Service Package
+        </h3>
+
+        <input
+          type="hidden"
+          id="packageId"
+        >
+
+        <div class="grid">
+
+          <div class="field">
+            <label for="packageService">
+              Service
+            </label>
+
+            <select id="packageService">
+              <option value="">
+                Select a service
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="packageName">
+              Package Name
+            </label>
+
+            <input
+              id="packageName"
+              type="text"
+              placeholder="e.g. Basic Package"
+            >
+          </div>
+
+          <div class="field">
+            <label for="packagePrice">
+              Price
+            </label>
+
+            <input
+              id="packagePrice"
+              type="number"
+              min="0"
+              step="0.01"
+            >
+          </div>
+
+          <div class="field">
+            <label for="packageCurrency">
+              Currency
+            </label>
+
+            <input
+              id="packageCurrency"
+              type="text"
+              value="NGN"
+            >
+          </div>
+
+          <div class="field">
+            <label for="packageDuration">
+              Duration
+            </label>
+
+            <input
+              id="packageDuration"
+              type="text"
+              placeholder="e.g. 2 hours"
+            >
+          </div>
+
+          <div class="field">
+            <label for="packageSortOrder">
+              Sort Order
+            </label>
+
+            <input
+              id="packageSortOrder"
+              type="number"
+              value="0"
+            >
+          </div>
+
+          <div class="field full">
+            <label for="packageDescription">
+              Package Description
+            </label>
+
+            <textarea
+              id="packageDescription"
+              class="small-textarea"
+            ></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="packageFeatures">
+              Package Features
+            </label>
+
+            <textarea
+              id="packageFeatures"
+              placeholder="One feature per line"
+            ></textarea>
+          </div>
+
+        </div>
+
+        <div class="button-row">
+
+          <button
+            class="primary"
+            id="savePackageBtn"
+          >
+            Add Package
+          </button>
+
+          <button
+            class="secondary"
+            id="cancelPackageBtn"
+            type="button"
+          >
+            Clear
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="subsection">
+
+        <h3>
+          Existing Packages
+        </h3>
+
+        <div id="packagesList">
+          <div class="loading">
+            Loading packages...
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+
+<script>
+// @ts-nocheck
+
+const SUPABASE_URL =
+  "https://qgaqdnlqftlazzqxykia.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_3ZomhHBPqFeZUw7C6RNEfg_EBP4OwvH";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// =========================================================
+// WEBSITE CONTENT FIELDS
+// =========================================================
+
+const websiteContentFields = [
+
+  {
+    section: "Hero",
+    key: "hero_eyebrow",
+    label: "Hero Eyebrow",
+    type: "input",
+    defaultValue: "OLAYINKA PHOTOGRAPHY"
+  },
+
+  {
+    section: "Hero",
+    key: "hero_title",
+    label: "Hero Title",
+    type: "textarea",
+    defaultValue: "Capturing moments.\nCreating memories."
+  },
+
+  {
+    section: "Hero",
+    key: "hero_description",
+    label: "Hero Description",
+    type: "textarea",
+    defaultValue:
+      "Professional event, portrait, wedding, graduation and lifestyle photography created around your story."
+  },
+
+  {
+    section: "Hero",
+    key: "hero_primary_button",
+    label: "Primary Button",
+    type: "input",
+    defaultValue: "Book a session"
+  },
+
+  {
+    section: "Hero",
+    key: "hero_secondary_button",
+    label: "Secondary Button",
+    type: "input",
+    defaultValue: "Explore portfolio"
+  },
+
+
+  {
+    section: "Our Approach",
+    key: "approach_eyebrow",
+    label: "Eyebrow",
+    type: "input",
+    defaultValue: "OUR APPROACH"
+  },
+
+  {
+    section: "Our Approach",
+    key: "approach_title",
+    label: "Title",
+    type: "input",
+    defaultValue: "Photography with meaning."
+  },
+
+  {
+    section: "Our Approach",
+    key: "approach_description_1",
+    label: "Description 1",
+    type: "textarea",
+    defaultValue:
+      "OLAYINKA PHOTOGRAPHY is a professional photography brand focused on creating authentic, memorable and high-quality images for individuals, organizations and events."
+  },
+
+  {
+    section: "Our Approach",
+    key: "approach_description_2",
+    label: "Description 2",
+    type: "textarea",
+    defaultValue:
+      "From portraits and weddings to graduations, personal branding and creative projects, every session is approached with attention to detail, visual storytelling and professional service."
+  },
+
+
+  {
+    section: "Portfolio",
+    key: "portfolio_eyebrow",
+    label: "Portfolio Eyebrow",
+    type: "input",
+    defaultValue: "SELECTED WORK"
+  },
+
+  {
+    section: "Portfolio",
+    key: "portfolio_title",
+    label: "Portfolio Title",
+    type: "input",
+    defaultValue: "Explore our portfolio."
+  },
+
+  {
+    section: "Portfolio",
+    key: "portfolio_description",
+    label: "Portfolio Description",
+    type: "textarea",
+    defaultValue:
+      "Discover a selection of photography from our different creative collections and events."
+  },
+
+  {
+    section: "Portfolio",
+    key: "featured_eyebrow",
+    label: "Featured Eyebrow",
+    type: "input",
+    defaultValue: "FEATURED WORK"
+  },
+
+  {
+    section: "Portfolio",
+    key: "featured_title",
+    label: "Featured Title",
+    type: "input",
+    defaultValue: "Selected moments."
+  },
+
+
+  {
+    section: "Services",
+    key: "services_eyebrow",
+    label: "Services Eyebrow",
+    type: "input",
+    defaultValue: "WHAT WE DO"
+  },
+
+  {
+    section: "Services",
+    key: "services_title",
+    label: "Services Title",
+    type: "input",
+    defaultValue: "Photography for every story."
+  },
+
+  {
+    section: "Services",
+    key: "services_description",
+    label: "Services Description",
+    type: "textarea",
+    defaultValue:
+      "Professional photography created around your personality, event, vision and story."
+  },
+
+
+  {
+    section: "Call To Action",
+    key: "cta_eyebrow",
+    label: "CTA Eyebrow",
+    type: "input",
+    defaultValue: "READY TO CREATE?"
+  },
+
+  {
+    section: "Call To Action",
+    key: "cta_title",
+    label: "CTA Title",
+    type: "input",
+    defaultValue: "Let's capture your story."
+  },
+
+  {
+    section: "Call To Action",
+    key: "cta_description",
+    label: "CTA Description",
+    type: "textarea",
+    defaultValue:
+      "Tell us about your photography needs and we'll help you plan the right session."
+  },
+
+  {
+    section: "Call To Action",
+    key: "cta_button",
+    label: "CTA Button",
+    type: "input",
+    defaultValue: "Book a session"
+  },
+
+
+  {
+    section: "About",
+    key: "about_eyebrow",
+    label: "About Eyebrow",
+    type: "input",
+    defaultValue: "ABOUT THE BUSINESS"
+  },
+
+  {
+    section: "About",
+    key: "about_title",
+    label: "About Title",
+    type: "input",
+    defaultValue: "OLAYINKA PHOTOGRAPHY"
+  },
+
+  {
+    section: "About",
+    key: "about_description",
+    label: "Business Description",
+    type: "textarea",
+    defaultValue:
+      "A professional photography brand focused on event, portrait, graduation, wedding and other lifestyle photography, providing high-quality images for individuals, organizations and events."
+  },
+
+  {
+    section: "About",
+    key: "about_history",
+    label: "Business History",
+    type: "textarea",
+    defaultValue:
+      "Olayinka Photography started in 2020 from a passion for photography and has grown through practical experience covering people, events and milestone moments. The brand aims to combine strong visual storytelling with professional service and high-quality image delivery."
+  },
+
+  {
+    section: "About",
+    key: "about_owner_name",
+    label: "Owner / Founder Name",
+    type: "input",
+    defaultValue:
+      "Emmanuel Olayinka Salawu"
+  },
+
+  {
+    section: "About",
+    key: "about_owner_bio",
+    label: "Owner / Founder Biography",
+    type: "textarea",
+    defaultValue:
+      "Emmanuel Olayinka Salawu is a Nigerian photographer with a passion for visual storytelling, portraits and event photography. He began photography in 2020 and has continued to develop his creative, technical and professional skills through real-world projects and event coverage."
+  },
+
+  {
+    section: "About",
+    key: "about_team",
+    label: "Team Information",
+    type: "textarea",
+    defaultValue:
+      "Currently primarily owner-led. Additional photographers, assistants or creatives may be engaged for larger assignments when required."
+  },
+
+  {
+    section: "About",
+    key: "about_mission",
+    label: "Mission",
+    type: "textarea",
+    defaultValue:
+      "To create authentic, memorable and professionally crafted images while giving clients a smooth, reliable and enjoyable photography experience."
+  },
+
+  {
+    section: "About",
+    key: "about_vision",
+    label: "Vision",
+    type: "textarea",
+    defaultValue:
+      "To build a respected photography and visual-media brand known for quality, creativity, professionalism and meaningful storytelling."
+  },
+
+  {
+    section: "About",
+    key: "about_qualifications",
+    label: "Qualifications / Certifications / Awards",
+    type: "textarea",
+    defaultValue:
+      "B.Sc. Microbiology, Federal University Oye-Ekiti (FUOYE). Photography experience since 2020. Additional photography training/certifications to be supplied if applicable."
+  },
+
+
+  {
+    section: "About Values",
+    key: "about_authentic_title",
+    label: "Authentic Title",
+    type: "input",
+    defaultValue: "Authentic"
+  },
+
+  {
+    section: "About Values",
+    key: "about_authentic_text",
+    label: "Authentic Description",
+    type: "textarea",
+    defaultValue:
+      "Real moments, genuine expressions and images that feel personal to you."
+  },
+
+  {
+    section: "About Values",
+    key: "about_professional_title",
+    label: "Professional Title",
+    type: "input",
+    defaultValue: "Professional"
+  },
+
+  {
+    section: "About Values",
+    key: "about_professional_text",
+    label: "Professional Description",
+    type: "textarea",
+    defaultValue:
+      "A reliable photography experience from enquiry through booking and final image delivery."
+  },
+
+  {
+    section: "About Values",
+    key: "about_creative_title",
+    label: "Creative Title",
+    type: "input",
+    defaultValue: "Creative"
+  },
+
+  {
+    section: "About Values",
+    key: "about_creative_text",
+    label: "Creative Description",
+    type: "textarea",
+    defaultValue:
+      "Photography shaped around your personality, event, vision and story."
+  },
+
+
+  {
+    section: "Testimonials",
+    key: "testimonials_eyebrow",
+    label: "Testimonials Eyebrow",
+    type: "input",
+    defaultValue: "CLIENT EXPERIENCES"
+  },
+
+  {
+    section: "Testimonials",
+    key: "testimonials_title",
+    label: "Testimonials Title",
+    type: "input",
+    defaultValue: "Moments captured. Memories kept."
+  },
+
+  {
+    section: "Testimonials",
+    key: "testimonials_description",
+    label: "Testimonials Description",
+    type: "textarea",
+    defaultValue:
+      "Client testimonials will appear here."
+  },
+
+
+  {
+    section: "Contact",
+    key: "contact_eyebrow",
+    label: "Contact Eyebrow",
+    type: "input",
+    defaultValue: "LET'S TALK"
+  },
+
+  {
+    section: "Contact",
+    key: "contact_title",
+    label: "Contact Title",
+    type: "input",
+    defaultValue: "Have a project in mind?"
+  },
+
+  {
+    section: "Contact",
+    key: "contact_description",
+    label: "Contact Description",
+    type: "textarea",
+    defaultValue:
+      "Whether it is a portrait session, wedding, graduation, event or creative project, tell us what you have in mind."
+  },
+
+
+  {
+    section: "Footer",
+    key: "footer_business_name",
+    label: "Footer Business Name",
+    type: "input",
+    defaultValue:
+      "OLAYINKA PHOTOGRAPHY"
+  },
+
+  {
+    section: "Footer",
+    key: "footer_tagline",
+    label: "Footer Tagline",
+    type: "input",
+    defaultValue:
+      "Capturing moments. Creating memories."
+  },
+
+  {
+    section: "Footer",
+    key: "footer_location",
+    label: "Footer Location",
+    type: "input",
+    defaultValue:
+      "Ibadan, Oyo State, Nigeria"
+  },
+
+  {
+    section: "Footer",
+    key: "footer_copyright",
+    label: "Footer Copyright",
+    type: "input",
+    defaultValue:
+      "© 2026 OLAYINKA PHOTOGRAPHY"
+  }
+
+];
+
+
+// =========================================================
+// LEGAL CONTENT
+// =========================================================
+
+const legalContentFields = [
+
+  {
+    key: "faq",
+    label: "Booking FAQs",
+    defaultValue: ""
+  },
+
+  {
+    key: "terms_and_conditions",
+    label: "Terms & Conditions",
+    defaultValue: ""
+  },
+
+  {
+    key: "privacy_policy",
+    label: "Privacy Policy",
+    defaultValue: ""
+  }
+
+];
+
+
+// =========================================================
+// HELPERS
+// =========================================================
+
+function showMessage(text, type) {
+
+  const box =
+    document.getElementById("message");
+
+  if (!box) {
+    return;
+  }
+
+  box.textContent = String(text || "");
+
+  box.className =
+    "message show " +
+    (type === "error"
+      ? "error-message"
+      : "success-message");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  setTimeout(function () {
+    box.className = "message";
+  }, 5000);
+}
+
+
+function escapeHtml(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function getBusinessHoursText(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (typeof value === "object") {
+
+    if (value.text) {
+      return String(value.text);
+    }
+
+    if (value.hours) {
+      return String(value.hours);
+    }
+  }
+
+  return "";
+}
+
+
+function getJsonObject(value) {
+
+  if (!value) {
+    return {};
+  }
+
+  if (typeof value === "object") {
+    return value;
+  }
+
+  try {
+    return JSON.parse(String(value));
+  } catch (error) {
+    return {};
+  }
+  }
+
+// =========================================================
+// ADMIN CHECK
+// =========================================================
+
+async function checkAdmin() {
+
+  const result =
+    await supabaseClient.auth.getUser();
+
+  const user =
+    result.data.user;
+
+  if (!user) {
+
+    window.location.href =
+      "../../login.html";
+
+    return false;
+  }
+
+  const profileResult =
+    await supabaseClient
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+  if (
+    profileResult.error ||
+    !profileResult.data ||
+    profileResult.data.role !== "admin"
+  ) {
+
+    alert("Admin access required.");
+
+    window.location.href =
+      "../../login.html";
+
+    return false;
+  }
+
+  return true;
+}
+
+
+// =========================================================
+// LOAD ADMIN SETTINGS
+// =========================================================
+
+async function loadSettings() {
+
+  const result =
+    await supabaseClient
+      .from("admin_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const data =
+    result.data;
+
+  if (!data) {
+    return;
+  }
+
+  document.getElementById("businessName").value =
+    data.business_name || "";
+
+  document.getElementById("businessEmail").value =
+    data.business_email || "";
+
+  document.getElementById("businessPhone").value =
+    data.business_phone || "";
+
+  document.getElementById("whatsappNumber").value =
+    data.whatsapp_number || "";
+
+  document.getElementById("address").value =
+    data.address || "";
+
+  document.getElementById("businessHours").value =
+    getBusinessHoursText(data.business_hours);
+
+  document.getElementById("depositPercentage").value =
+    data.deposit_percentage ?? 50;
+
+  document.getElementById("paymentInstructions").value =
+    data.payment_instructions || "";
+
+  const bookingSettings =
+    getJsonObject(data.booking_settings);
+
+  document.getElementById("defaultDuration").value =
+    bookingSettings.default_duration ||
+    bookingSettings.duration ||
+    "";
+
+  const socialLinks =
+    getJsonObject(data.social_links);
+
+  document.getElementById("instagram").value =
+    socialLinks.instagram || "";
+
+  document.getElementById("facebook").value =
+    socialLinks.facebook || "";
+
+  document.getElementById("tiktok").value =
+    socialLinks.tiktok || "";
+
+  document.getElementById("website").value =
+    socialLinks.website || "";
+
+  document.getElementById("logoUrl").value =
+    data.logo_url || "";
+
+  document.getElementById("logoStoragePath").value =
+    data.logo_storage_path || "";
+
+  document.getElementById("photographerPhotoUrl").value =
+    data.photographer_photo_url || "";
+
+  document.getElementById("photographerPhotoStoragePath").value =
+    data.photographer_photo_storage_path || "";
+}
+
+
+// =========================================================
+// GET SETTINGS ROW
+// =========================================================
+
+async function getSettingsRow() {
+
+  const result =
+    await supabaseClient
+      .from("admin_settings")
+      .select("id")
+      .limit(1)
+      .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return result.data;
+}
+
+
+// =========================================================
+// SAVE BUSINESS INFORMATION
+// =========================================================
+
+async function saveBusinessInformation() {
+
+  const row =
+    await getSettingsRow();
+
+  const values = {
+
+    business_name:
+      document.getElementById("businessName").value.trim(),
+
+    business_email:
+      document.getElementById("businessEmail").value.trim(),
+
+    business_phone:
+      document.getElementById("businessPhone").value.trim(),
+
+    whatsapp_number:
+      document.getElementById("whatsappNumber").value.trim(),
+
+    address:
+      document.getElementById("address").value.trim(),
+
+    business_hours: {
+      text:
+        document.getElementById("businessHours").value.trim()
+    },
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+  let result;
+
+  if (row) {
+
+    result =
+      await supabaseClient
+        .from("admin_settings")
+        .update(values)
+        .eq("id", row.id);
+
+  } else {
+
+    result =
+      await supabaseClient
+        .from("admin_settings")
+        .insert(values);
+  }
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  showMessage(
+    "Business information saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// SAVE BOOKING SETTINGS
+// =========================================================
+
+async function saveBookingSettings() {
+
+  const row =
+    await getSettingsRow();
+
+  if (!row) {
+    throw new Error(
+      "Admin settings record was not found."
+    );
+  }
+
+  const currentResult =
+    await supabaseClient
+      .from("admin_settings")
+      .select("booking_settings")
+      .eq("id", row.id)
+      .single();
+
+  if (currentResult.error) {
+    throw currentResult.error;
+  }
+
+  const currentBooking =
+    getJsonObject(
+      currentResult.data.booking_settings
+    );
+
+  currentBooking.default_duration =
+    document.getElementById("defaultDuration").value.trim();
+
+  const values = {
+
+    deposit_percentage:
+      Number(
+        document.getElementById("depositPercentage").value
+      ) || 0,
+
+    payment_instructions:
+      document
+        .getElementById("paymentInstructions")
+        .value
+        .trim(),
+
+    booking_settings:
+      currentBooking,
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+  const result =
+    await supabaseClient
+      .from("admin_settings")
+      .update(values)
+      .eq("id", row.id);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  showMessage(
+    "Booking settings saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// SAVE SOCIAL LINKS
+// =========================================================
+
+async function saveSocialLinks() {
+
+  const row =
+    await getSettingsRow();
+
+  if (!row) {
+    throw new Error(
+      "Admin settings record was not found."
+    );
+  }
+
+  const socialLinks = {
+
+    instagram:
+      document.getElementById("instagram").value.trim(),
+
+    facebook:
+      document.getElementById("facebook").value.trim(),
+
+    tiktok:
+      document.getElementById("tiktok").value.trim(),
+
+    website:
+      document.getElementById("website").value.trim()
+
+  };
+
+  const result =
+    await supabaseClient
+      .from("admin_settings")
+      .update({
+        social_links: socialLinks,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", row.id);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  showMessage(
+    "Social links saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// SAVE BRAND ASSETS
+// =========================================================
+
+async function saveBrandAssets() {
+
+  const row =
+    await getSettingsRow();
+
+  if (!row) {
+    throw new Error(
+      "Admin settings record was not found."
+    );
+  }
+
+  const values = {
+
+    logo_url:
+      document.getElementById("logoUrl").value.trim(),
+
+    logo_storage_path:
+      document
+        .getElementById("logoStoragePath")
+        .value
+        .trim(),
+
+    photographer_photo_url:
+      document
+        .getElementById("photographerPhotoUrl")
+        .value
+        .trim(),
+
+    photographer_photo_storage_path:
+      document
+        .getElementById("photographerPhotoStoragePath")
+        .value
+        .trim(),
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+  const result =
+    await supabaseClient
+      .from("admin_settings")
+      .update(values)
+      .eq("id", row.id);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  showMessage(
+    "Brand assets saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// RENDER WEBSITE CONTENT EDITOR
+// =========================================================
+
+function renderWebsiteContentEditor() {
+
+  const container =
+    document.getElementById(
+      "websiteContentContainer"
+    );
+
+  container.innerHTML = "";
+
+  let currentSection = "";
+
+  for (
+    let i = 0;
+    i < websiteContentFields.length;
+    i++
+  ) {
+
+    const field =
+      websiteContentFields[i];
+
+    if (field.section !== currentSection) {
+
+      currentSection =
+        field.section;
+
+      const heading =
+        document.createElement("h3");
+
+      heading.textContent =
+        currentSection;
+
+      heading.style.marginTop =
+        "25px";
+
+      container.appendChild(
+        heading
+      );
+    }
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "content-card";
+
+    const title =
+      document.createElement("h3");
+
+    title.textContent =
+      field.label;
+
+    card.appendChild(title);
+
+    let element;
+
+    if (field.type === "textarea") {
+
+      element =
+        document.createElement("textarea");
+
+      element.className =
+        "website-content-field";
+
+    } else {
+
+      element =
+        document.createElement("input");
+
+      element.type =
+        "text";
+
+      element.className =
+        "website-content-field";
+    }
+
+    element.dataset.key =
+      field.key;
+
+    element.dataset.defaultValue =
+      field.defaultValue || "";
+
+    element.placeholder =
+      field.defaultValue || "";
+
+    card.appendChild(element);
+
+    const keyText =
+      document.createElement("div");
+
+    keyText.className =
+      "content-key";
+
+    keyText.textContent =
+      "Key: " + field.key;
+
+    card.appendChild(keyText);
+
+    container.appendChild(card);
+  }
+}
+
+
+// =========================================================
+// LOAD WEBSITE CONTENT
+// =========================================================
+
+async function loadWebsiteContent() {
+
+  renderWebsiteContentEditor();
+
+  const result =
+    await supabaseClient
+      .from("website_content")
+      .select(
+        "content_key,title,content,is_published"
+      );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const records =
+    result.data || [];
+
+  const fields =
+    document.querySelectorAll(
+      ".website-content-field"
+    );
+
+  for (let i = 0; i < fields.length; i++) {
+
+    const field =
+      fields[i];
+
+    const key =
+      field.dataset.key;
+
+    let found = null;
+
+    for (let j = 0; j < records.length; j++) {
+
+      if (
+        records[j].content_key === key
+      ) {
+        found =
+          records[j];
+
+        break;
+      }
+    }
+
+    if (found) {
+
+      field.value =
+        found.content || "";
+
+    } else {
+
+      field.value =
+        field.dataset.defaultValue || "";
+    }
+  }
+}
+
+
+// =========================================================
+// SAVE ONE WEBSITE CONTENT RECORD
+// =========================================================
+
+async function saveContentRecord(
+  key,
+  title,
+  content,
+  isPublished
+) {
+
+  const existingResult =
+    await supabaseClient
+      .from("website_content")
+      .select("id")
+      .eq("content_key", key)
+      .limit(1)
+      .maybeSingle();
+
+  if (existingResult.error) {
+    throw existingResult.error;
+  }
+
+  const values = {
+
+    content_key: key,
+    title: title,
+    content: content,
+    is_published: isPublished,
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+  if (existingResult.data) {
+
+    const result =
+      await supabaseClient
+        .from("website_content")
+        .update(values)
+        .eq(
+          "id",
+          existingResult.data.id
+        );
+
+    if (result.error) {
+      throw result.error;
+    }
+
+  } else {
+
+    const result =
+      await supabaseClient
+        .from("website_content")
+        .insert(values);
+
+    if (result.error) {
+      throw result.error;
+    }
+  }
+}
+
+
+// =========================================================
+// SAVE WEBSITE CONTENT
+// =========================================================
+
+async function saveWebsiteContent() {
+
+  const fields =
+    document.querySelectorAll(
+      ".website-content-field"
+    );
+
+  for (let i = 0; i < fields.length; i++) {
+
+    const field =
+      fields[i];
+
+    const key =
+      field.dataset.key;
+
+    let title =
+      key;
+
+    for (
+      let j = 0;
+      j < websiteContentFields.length;
+      j++
+    ) {
+
+      if (
+        websiteContentFields[j].key === key
+      ) {
+
+        title =
+          websiteContentFields[j].label;
+
+        break;
+      }
+    }
+
+    await saveContentRecord(
+      key,
+      title,
+      field.value.trim(),
+      true
+    );
+  }
+
+  showMessage(
+    "Website content saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// LEGAL CONTENT RENDER
+// =========================================================
+
+function renderLegalContent() {
+
+  const container =
+    document.getElementById(
+      "legalContentContainer"
+    );
+
+  container.innerHTML = "";
+
+  for (
+    let i = 0;
+    i < legalContentFields.length;
+    i++
+  ) {
+
+    const field =
+      legalContentFields[i];
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "content-card";
+
+    const title =
+      document.createElement("h3");
+
+    title.textContent =
+      field.label;
+
+    card.appendChild(title);
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.className =
+      "legal-content-field";
+
+    textarea.dataset.key =
+      field.key;
+
+    textarea.dataset.title =
+      field.label;
+
+    textarea.placeholder =
+      "Enter " +
+      field.label +
+      "...";
+
+    card.appendChild(textarea);
+
+    const keyText =
+      document.createElement("div");
+
+    keyText.className =
+      "content-key";
+
+    keyText.textContent =
+      "Key: " +
+      field.key;
+
+    card.appendChild(keyText);
+
+    const checkRow =
+      document.createElement("div");
+
+    checkRow.className =
+      "check-row";
+
+    const checkbox =
+      document.createElement("input");
+
+    checkbox.type =
+      "checkbox";
+
+    checkbox.className =
+      "legal-published";
+
+    checkbox.dataset.key =
+      field.key;
+
+    checkbox.checked =
+      true;
+
+    const checkLabel =
+      document.createElement("span");
+
+    checkLabel.textContent =
+      "Published";
+
+    checkRow.appendChild(
+      checkbox
+    );
+
+    checkRow.appendChild(
+      checkLabel
+    );
+
+    card.appendChild(
+      checkRow
+    );
+
+    container.appendChild(
+      card
+    );
+  }
+}
+
+
+// =========================================================
+// LOAD LEGAL CONTENT
+// =========================================================
+
+async function loadLegalContent() {
+
+  renderLegalContent();
+
+  const result =
+    await supabaseClient
+      .from("website_content")
+      .select(
+        "content_key,content,is_published"
+      )
+      .in(
+        "content_key",
+        [
+          "faq",
+          "terms_and_conditions",
+          "privacy_policy"
+        ]
+      );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const records =
+    result.data || [];
+
+  const fields =
+    document.querySelectorAll(
+      ".legal-content-field"
+    );
+
+  for (let i = 0; i < fields.length; i++) {
+
+    const field =
+      fields[i];
+
+    const key =
+      field.dataset.key;
+
+    for (let j = 0; j < records.length; j++) {
+
+      if (
+        records[j].content_key === key
+      ) {
+
+        field.value =
+          records[j].content || "";
+
+        const checkbox =
+          document.querySelector(
+            '.legal-published[data-key="' +
+            key +
+            '"]'
+          );
+
+        if (checkbox) {
+
+          checkbox.checked =
+            records[j].is_published !== false;
+        }
+
+        break;
+      }
+    }
+  }
+}
+
+
+// =========================================================
+// SAVE LEGAL CONTENT
+// =========================================================
+
+async function saveLegalContent() {
+
+  const fields =
+    document.querySelectorAll(
+      ".legal-content-field"
+    );
+
+  for (let i = 0; i < fields.length; i++) {
+
+    const field =
+      fields[i];
+
+    const key =
+      field.dataset.key;
+
+    const checkbox =
+      document.querySelector(
+        '.legal-published[data-key="' +
+        key +
+        '"]'
+      );
+
+    await saveContentRecord(
+      key,
+      field.dataset.title,
+      field.value.trim(),
+      checkbox
+        ? checkbox.checked
+        : true
+    );
+  }
+
+  showMessage(
+    "Legal and FAQ content saved successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// LOAD SERVICES
+// =========================================================
+
+async function loadServices() {
+
+  const result =
+    await supabaseClient
+      .from("services")
+      .select(
+        "id,name,is_active"
+      )
+      .order(
+        "sort_order",
+        { ascending: true }
+      );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const select =
+    document.getElementById(
+      "packageService"
+    );
+
+  select.innerHTML =
+    '<option value="">Select a service</option>';
+
+  const services =
+    result.data || [];
+
+  for (let i = 0; i < services.length; i++) {
+
+    const service =
+      services[i];
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      service.id;
+
+    option.textContent =
+      service.name +
+      (
+        service.is_active
+          ? ""
+          : " (Hidden)"
+      );
+
+    select.appendChild(
+      option
+    );
+  }
+}
+
+
+// =========================================================
+// LOAD PACKAGES
+// =========================================================
+
+async function loadPackages() {
+
+  const result =
+    await supabaseClient
+      .from("service_packages")
+      .select(
+        `
+        id,
+        service_id,
+        name,
+        description,
+        price,
+        currency,
+        duration,
+        features,
+        is_active,
+        sort_order,
+        services (
+          name
+        )
+        `
+      )
+      .order(
+        "sort_order",
+        { ascending: true }
+      );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const container =
+    document.getElementById(
+      "packagesList"
+    );
+
+  container.innerHTML = "";
+
+  const packages =
+    result.data || [];
+
+  if (packages.length === 0) {
+
+    container.innerHTML =
+      '<div class="loading">No service packages yet.</div>';
+
+    return;
+  }
+
+  for (
+    let i = 0;
+    i < packages.length;
+    i++
+  ) {
+
+    const pkg =
+      packages[i];
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "package-card";
+
+    const statusClass =
+      pkg.is_active
+        ? ""
+        : " off";
+
+    const statusText =
+      pkg.is_active
+        ? "Active"
+        : "Hidden";
+
+    const serviceName =
+      pkg.services &&
+      pkg.services.name
+        ? pkg.services.name
+        : "Service";
+
+    let features = "";
+
+    if (Array.isArray(pkg.features)) {
+
+      features =
+        pkg.features.join("\n");
+
+    } else if (
+      typeof pkg.features === "string"
+    ) {
+
+      features =
+        pkg.features;
+    }
+
+    card.innerHTML = `
+
+      <span class="status${statusClass}">
+        ${escapeHtml(statusText)}
+      </span>
+
+      <h3>
+        ${escapeHtml(pkg.name)}
+      </h3>
+
+      <div class="package-meta">
+        ${escapeHtml(serviceName)}
+      </div>
+
+      <div class="package-price">
+        ${escapeHtml(pkg.currency || "NGN")}
+        ${Number(pkg.price || 0).toLocaleString()}
+      </div>
+
+      <div class="package-meta">
+        Duration:
+        ${escapeHtml(pkg.duration || "Not specified")}
+      </div>
+
+      <p>
+        ${escapeHtml(pkg.description || "")}
+      </p>
+
+      <div class="feature-list">
+        ${escapeHtml(features)}
+      </div>
+
+      <div class="button-row">
+
+        <button
+          class="secondary"
+          type="button"
+          onclick="editPackage(${pkg.id})"
+        >
+          Edit
+        </button>
+
+        <button
+          class="${pkg.is_active ? "danger" : "success"}"
+          type="button"
+          onclick="togglePackage(${pkg.id}, ${pkg.is_active})"
+        >
+          ${pkg.is_active ? "Hide" : "Activate"}
+        </button>
+
+        <button
+          class="danger"
+          type="button"
+          onclick="deletePackage(${pkg.id})"
+        >
+          Delete
+        </button>
+
+      </div>
+    `;
+
+    container.appendChild(
+      card
+    );
+  }
+}
+
+
+// =========================================================
+// CLEAR PACKAGE FORM
+// =========================================================
+
+function clearPackageForm() {
+
+  document.getElementById(
+    "packageId"
+  ).value = "";
+
+  document.getElementById(
+    "packageService"
+  ).value = "";
+
+  document.getElementById(
+    "packageName"
+  ).value = "";
+
+  document.getElementById(
+    "packagePrice"
+  ).value = "";
+
+  document.getElementById(
+    "packageCurrency"
+  ).value = "NGN";
+
+  document.getElementById(
+    "packageDuration"
+  ).value = "";
+
+  document.getElementById(
+    "packageSortOrder"
+  ).value = "0";
+
+  document.getElementById(
+    "packageDescription"
+  ).value = "";
+
+  document.getElementById(
+    "packageFeatures"
+  ).value = "";
+
+  document.getElementById(
+    "packageFormTitle"
+  ).textContent =
+    "Add Service Package";
+
+  document.getElementById(
+    "savePackageBtn"
+  ).textContent =
+    "Add Package";
+}
+
+
+// =========================================================
+// SAVE PACKAGE
+// =========================================================
+
+async function savePackage() {
+
+  const id =
+    document.getElementById(
+      "packageId"
+    ).value;
+
+  const serviceId =
+    document.getElementById(
+      "packageService"
+    ).value;
+
+  const name =
+    document.getElementById(
+      "packageName"
+    ).value.trim();
+
+  const price =
+    Number(
+      document.getElementById(
+        "packagePrice"
+      ).value
+    );
+
+  const currency =
+    document.getElementById(
+      "packageCurrency"
+    ).value.trim() ||
+    "NGN";
+
+  const duration =
+    document.getElementById(
+      "packageDuration"
+    ).value.trim();
+
+  const sortOrder =
+    Number(
+      document.getElementById(
+        "packageSortOrder"
+      ).value
+    ) || 0;
+
+  const description =
+    document.getElementById(
+      "packageDescription"
+    ).value.trim();
+
+  const featureText =
+    document.getElementById(
+      "packageFeatures"
+    ).value;
+
+  const features =
+    featureText
+      .split("\n")
+      .map(function (item) {
+        return item.trim();
+      })
+      .filter(function (item) {
+        return item.length > 0;
+      });
+
+  if (!serviceId) {
+
+    showMessage(
+      "Please select a service.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (!name) {
+
+    showMessage(
+      "Please enter a package name.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (isNaN(price)) {
+
+    showMessage(
+      "Please enter a valid price.",
+      "error"
+    );
+
+    return;
+  }
+
+  const values = {
+
+    service_id:
+      Number(serviceId),
+
+    name:
+      name,
+
+    description:
+      description,
+
+    price:
+      price,
+
+    currency:
+      currency,
+
+    duration:
+      duration,
+
+    features:
+      features,
+
+    sort_order:
+      sortOrder,
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+  let result;
+
+  if (id) {
+
+    result =
+      await supabaseClient
+        .from("service_packages")
+        .update(values)
+        .eq(
+          "id",
+          Number(id)
+        );
+
+  } else {
+
+    values.is_active =
+      true;
+
+    result =
+      await supabaseClient
+        .from("service_packages")
+        .insert(values);
+  }
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  clearPackageForm();
+
+  await loadPackages();
+
+  showMessage(
+    id
+      ? "Package updated successfully."
+      : "Package added successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// EDIT PACKAGE
+// =========================================================
+
+async function editPackage(id) {
+
+  const result =
+    await supabaseClient
+      .from("service_packages")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  const pkg =
+    result.data;
+
+  document.getElementById(
+    "packageId"
+  ).value =
+    pkg.id;
+
+  document.getElementById(
+    "packageService"
+  ).value =
+    pkg.service_id;
+
+  document.getElementById(
+    "packageName"
+  ).value =
+    pkg.name || "";
+
+  document.getElementById(
+    "packagePrice"
+  ).value =
+    pkg.price ?? "";
+
+  document.getElementById(
+    "packageCurrency"
+  ).value =
+    pkg.currency || "NGN";
+
+  document.getElementById(
+    "packageDuration"
+  ).value =
+    pkg.duration || "";
+
+  document.getElementById(
+    "packageSortOrder"
+  ).value =
+    pkg.sort_order ?? 0;
+
+  document.getElementById(
+    "packageDescription"
+  ).value =
+    pkg.description || "";
+
+  let features = "";
+
+  if (Array.isArray(pkg.features)) {
+
+    features =
+      pkg.features.join("\n");
+
+  } else if (
+    typeof pkg.features === "string"
+  ) {
+
+    features =
+      pkg.features;
+  }
+
+  document.getElementById(
+    "packageFeatures"
+  ).value =
+    features;
+
+  document.getElementById(
+    "packageFormTitle"
+  ).textContent =
+    "Edit Service Package";
+
+  document.getElementById(
+    "savePackageBtn"
+  ).textContent =
+    "Update Package";
+
+  window.scrollTo({
+    top:
+      document.getElementById(
+        "packageFormTitle"
+      ).getBoundingClientRect().top +
+      window.scrollY -
+      100,
+    behavior: "smooth"
+  });
+}
+
+
+// =========================================================
+// TOGGLE PACKAGE
+// =========================================================
+
+async function togglePackage(
+  id,
+  currentStatus
+) {
+
+  const result =
+    await supabaseClient
+      .from("service_packages")
+      .update({
+        is_active:
+          !currentStatus,
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq("id", id);
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  await loadPackages();
+
+  showMessage(
+    currentStatus
+      ? "Package hidden."
+      : "Package activated.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// DELETE PACKAGE
+// =========================================================
+
+async function deletePackage(id) {
+
+  const confirmed =
+    confirm(
+      "Delete this service package?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const result =
+    await supabaseClient
+      .from("service_packages")
+      .delete()
+      .eq("id", id);
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  await loadPackages();
+
+  showMessage(
+    "Package deleted successfully.",
+    "success"
+  );
+}
+
+
+// =========================================================
+// BUTTON EVENTS
+// =========================================================
+
+document.getElementById(
+  "saveBusinessBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveBusinessInformation();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save business information.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "saveBookingBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveBookingSettings();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save booking settings.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "saveSocialBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveSocialLinks();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save social links.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "saveAssetsBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveBrandAssets();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save brand assets.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "saveWebsiteContentBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveWebsiteContent();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save website content.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "saveLegalBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await saveLegalContent();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save legal content.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "savePackageBtn"
+).addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      await savePackage();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Could not save package.",
+        "error"
+      );
+    }
+  }
+);
+
+
+document.getElementById(
+  "cancelPackageBtn"
+).addEventListener(
+  "click",
+  function () {
+
+    clearPackageForm();
+  }
+);
+
+
+// =========================================================
+// INITIALIZE
+// =========================================================
+
+async function init() {
+
+  try {
+
+    const isAdmin =
+      await checkAdmin();
+
+    if (!isAdmin) {
+      return;
+    }
+
+    await loadSettings();
+
+    await loadWebsiteContent();
+
+    await loadLegalContent();
+
+    await loadServices();
+
+    await loadPackages();
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message ||
+      "Something went wrong while loading Settings.",
+      "error"
+    );
+  }
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>

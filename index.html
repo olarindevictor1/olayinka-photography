@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Testimonials | Olayinka Photography</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: #f5f1e8;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #111;
+      border-bottom: 1px solid #292929;
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-link {
+      color: #d6b76c;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    .brand-name {
+      font-family: Georgia, serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 18px 60px;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading small {
+      color: #b99a5b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+    }
+
+    .page-heading h1 {
+      font-family: Georgia, serif;
+      font-size: 31px;
+      margin-top: 8px;
+    }
+
+    .page-heading p {
+      color: #888;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* SUMMARY */
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .summary-card {
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .summary-card small {
+      display: block;
+      color: #777;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 9px;
+    }
+
+    .summary-card strong {
+      color: #d6b76c;
+      font-family: Georgia, serif;
+      font-size: 27px;
+    }
+
+    /* TOOLBAR */
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-title {
+      font-family: Georgia, serif;
+      font-size: 21px;
+    }
+
+    .refresh-btn {
+      border: 1px solid #d6b76c;
+      background: transparent;
+      color: #d6b76c;
+      padding: 9px 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .refresh-btn:hover {
+      background: #d6b76c;
+      color: #111;
+    }
+
+    /* TESTIMONIAL LIST */
+
+    .testimonial-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .testimonial-card {
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .testimonial-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 14px;
+    }
+
+    .customer-name {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .customer-service {
+      color: #888;
+      font-size: 12px;
+    }
+
+    .rating {
+      color: #d6b76c;
+      font-size: 17px;
+      white-space: nowrap;
+    }
+
+    .testimonial-text {
+      background: #101010;
+      border-radius: 7px;
+      padding: 15px;
+      color: #ccc;
+      line-height: 1.7;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .testimonial-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .date {
+      color: #666;
+      font-size: 11px;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .status.pending {
+      background: #30291c;
+      color: #d6b76c;
+    }
+
+    .status.approved {
+      background: #18301f;
+      color: #7ed394;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: none;
+      padding: 9px 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .approve-btn {
+      background: #d6b76c;
+      color: #111;
+    }
+
+    .unpublish-btn {
+      background: #292929;
+      color: #d6b76c;
+      border: 1px solid #444;
+    }
+
+    .delete-btn {
+      background: #3a1919;
+      color: #ff8c8c;
+      border: 1px solid #5a2424;
+    }
+
+    .action-btn:hover {
+      opacity: .85;
+    }
+
+    .empty,
+    .loading {
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 7px;
+      margin-bottom: 18px;
+      font-size: 13px;
+    }
+
+    .message.success {
+      display: block;
+      background: #17301e;
+      border: 1px solid #285c35;
+      color: #8be09d;
+    }
+
+    .message.error {
+      display: block;
+      background: #321919;
+      border: 1px solid #642828;
+      color: #ff9999;
+    }
+
+    @media (max-width: 700px) {
+
+      .brand-name {
+        display: none;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonial-top {
+        flex-direction: column;
+      }
+
+      main {
+        padding: 25px 15px 50px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+
+    <div class="header-left">
+
+      <a
+        href="../index.html"
+        class="back-link"
+      >
+        ← Admin Dashboard
+      </a>
+
+      <div class="brand">
+
+        <img
+          src="https://qgaqdnlqftlazzqxykia.supabase.co/storage/v1/object/public/site-assets/logo/IMG-20260924-WA0031.jpg"
+          alt="OLAYINKA PHOTOGRAPHY"
+        >
+
+        <div class="brand-name">
+          OLAYINKA PHOTOGRAPHY
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="page-heading">
+
+      <small>
+        Customer Feedback
+      </small>
+
+      <h1>
+        Testimonials
+      </h1>
+
+      <p>
+        Review customer testimonials and approve the ones
+        you want to display on the public website.
+      </p>
+
+    </section>
+
+
+    <!-- MESSAGE -->
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary">
+
+      <div class="summary-card">
+
+        <small>
+          Total Testimonials
+        </small>
+
+        <strong id="totalCount">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <small>
+          Pending Review
+        </small>
+
+        <strong id="pendingCount">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <small>
+          Approved
+        </small>
+
+        <strong id="approvedCount">
+          0
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+      <h2 class="toolbar-title">
+        Customer Testimonials
+      </h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadTestimonials()"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+
+    <!-- LIST -->
+
+    <section
+      id="testimonialList"
+      class="testimonial-list"
+    >
+
+      <div class="loading">
+        Loading testimonials...
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    // @ts-nocheck
+
+    const supabaseUrl =
+      "https://qgaqdnlqftlazzqxykia.supabase.co";
+
+    const supabaseKey =
+      "sb_publishable_3ZomhHBPqFeZUw7C6RNEfg_EBP4OwvH";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+      );
+
+
+    let testimonials = [];
+
+
+    // ==============================
+    // ESCAPE HTML
+    // ==============================
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    // ==============================
+    // FORMAT DATE
+    // ==============================
+
+    function formatDate(date) {
+
+      if (!date) {
+        return "Unknown date";
+      }
+
+      return new Date(date)
+        .toLocaleDateString(
+          "en-NG",
+          {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          }
+        );
+
+    }
+
+
+    // ==============================
+    // RATING
+    // ==============================
+
+    function renderRating(rating) {
+
+      const value =
+        Math.max(
+          0,
+          Math.min(
+            5,
+            Number(rating || 0)
+          )
+        );
+
+      let stars = "";
+
+      for (let i = 1; i <= 5; i++) {
+
+        stars +=
+          i <= value
+            ? "★"
+            : "☆";
+
+      }
+
+      return stars;
+
+    }
+
+
+    // ==============================
+    // MESSAGE
+    // ==============================
+
+    function showMessage(
+      text,
+      type = "success"
+    ) {
+
+      const box =
+        document.getElementById(
+          "message"
+        );
+
+      box.textContent = text;
+
+      box.className =
+        "message " + type;
+
+      clearTimeout(
+        window.messageTimer
+      );
+
+      window.messageTimer =
+        setTimeout(
+          function () {
+
+            box.className =
+              "message";
+
+            box.textContent = "";
+
+          },
+          4000
+        );
+
+    }
+
+
+    // ==============================
+    // ADMIN CHECK
+    // ==============================
+
+    async function checkAdmin() {
+
+      const {
+        data: userData,
+        error: userError
+      } =
+        await supabaseClient.auth.getUser();
+
+
+      if (
+        userError ||
+        !userData.user
+      ) {
+
+        window.location.href =
+          "../../login.html";
+
+        return false;
+
+      }
+
+
+      const {
+        data: profile,
+        error: profileError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select("role")
+          .eq(
+            "id",
+            userData.user.id
+          )
+          .maybeSingle();
+
+
+      if (
+        profileError ||
+        profile?.role !== "admin"
+      ) {
+
+        alert(
+          "You do not have permission to access this page."
+        );
+
+        window.location.href =
+          "../index.html";
+
+        return false;
+
+      }
+
+
+      return true;
+
+    }
+
+
+    // ==============================
+    // LOAD TESTIMONIALS
+    // ==============================
+
+    async function loadTestimonials() {
+
+      const list =
+        document.getElementById(
+          "testimonialList"
+        );
+
+
+      list.innerHTML = `
+
+        <div class="loading">
+          Loading testimonials...
+        </div>
+
+      `;
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from("testimonials")
+          .select(`
+            id,
+            customer_id,
+            customer_name,
+            customer_title,
+            testimonial,
+            rating,
+            is_published,
+            created_at,
+            updated_at,
+            services (
+              name
+            )
+          `)
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+      if (error) {
+
+        console.error(
+          "Testimonials error:",
+          error
+        );
+
+        list.innerHTML = `
+
+          <div class="empty">
+
+            Unable to load testimonials.
+
+            <br><br>
+
+            ${escapeHtml(
+              error.message
+            )}
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      testimonials =
+        data || [];
+
+
+      updateSummary();
+
+
+      renderTestimonials();
+
+    }
+
+
+    // ==============================
+    // SUMMARY
+    // ==============================
+
+    function updateSummary() {
+
+      const total =
+        testimonials.length;
+
+
+      const approved =
+        testimonials.filter(
+          function (item) {
+            return item.is_published === true;
+          }
+        ).length;
+
+
+      const pending =
+        total - approved;
+
+
+      document.getElementById(
+        "totalCount"
+      ).textContent = total;
+
+
+      document.getElementById(
+        "pendingCount"
+      ).textContent = pending;
+
+
+      document.getElementById(
+        "approvedCount"
+      ).textContent = approved;
+
+    }
+
+
+    // ==============================
+    // RENDER
+    // ==============================
+
+    function renderTestimonials() {
+
+      const list =
+        document.getElementById(
+          "testimonialList"
+        );
+
+
+      if (!testimonials.length) {
+
+        list.innerHTML = `
+
+          <div class="empty">
+
+            <div style="font-size:35px;margin-bottom:10px;">
+              ⭐
+            </div>
+
+            <strong>
+              No testimonials yet
+            </strong>
+
+            <p style="margin-top:8px;">
+              Customer testimonials will appear here
+              when customers submit them.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      list.innerHTML = "";
+
+
+      testimonials.forEach(
+        function (item) {
+
+          const card =
+            document.createElement(
+              "article"
+            );
+
+
+          card.className =
+            "testimonial-card";
+
+
+          const serviceName =
+            item.services?.name ||
+            "General";
+
+
+          const approved =
+            item.is_published === true;
+
+
+          const statusClass =
+            approved
+              ? "approved"
+              : "pending";
+
+
+          const statusText =
+            approved
+              ? "Approved"
+              : "Pending Review";
+
+
+          card.innerHTML = `
+
+            <div class="testimonial-top">
+
+              <div>
+
+                <div class="customer-name">
+
+                  ${escapeHtml(
+                    item.customer_name
+                  )}
+
+                </div>
+
+                ${
+                  item.customer_title
+                    ? `
+                      <div class="customer-service">
+                        ${escapeHtml(
+                          item.customer_title
+                        )}
+                      </div>
+                    `
+                    : ""
+                }
+
+                <div class="customer-service">
+
+                  Service:
+                  ${escapeHtml(
+                    serviceName
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div class="rating">
+
+                ${renderRating(
+                  item.rating
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="testimonial-text">
+
+              “${escapeHtml(
+                item.testimonial
+              )}”
+
+            </div>
+
+
+            <div class="testimonial-meta">
+
+              <span class="date">
+
+                Submitted:
+                ${formatDate(
+                  item.created_at
+                )}
+
+              </span>
+
+
+              <span class="status ${statusClass}">
+
+                ${statusText}
+
+              </span>
+
+            </div>
+
+
+            <div class="actions">
+
+              ${
+                approved
+
+                  ? `
+
+                    <button
+                      class="action-btn unpublish-btn"
+                      onclick="togglePublished(
+                        ${item.id},
+                        false
+                      )"
+                    >
+                      Unpublish
+                    </button>
+
+                  `
+
+                  : `
+
+                    <button
+                      class="action-btn approve-btn"
+                      onclick="togglePublished(
+                        ${item.id},
+                        true
+                      )"
+                    >
+                      Approve
+                    </button>
+
+                  `
+              }
+
+
+              <button
+                class="action-btn delete-btn"
+                onclick="deleteTestimonial(
+                  ${item.id}
+                )"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          `;
+
+
+          list.appendChild(
+            card
+          );
+
+        }
+      );
+
+    }
+
+
+    // ==============================
+    // APPROVE / UNPUBLISH
+    // ==============================
+
+    async function togglePublished(
+      id,
+      published
+    ) {
+
+      const action =
+        published
+          ? "approve"
+          : "unpublish";
+
+
+      const confirmed =
+        confirm(
+          published
+            ? "Approve this testimonial and show it on the public website?"
+            : "Unpublish this testimonial from the public website?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("testimonials")
+          .update({
+            is_published:
+              published,
+            updated_at:
+              new Date().toISOString()
+          })
+          .eq(
+            "id",
+            id
+          );
+
+
+      if (error) {
+
+        console.error(
+          "Update testimonial error:",
+          error
+        );
+
+        showMessage(
+          "Could not " +
+          action +
+          " testimonial: " +
+          error.message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      showMessage(
+        published
+          ? "Testimonial approved successfully."
+          : "Testimonial unpublished successfully."
+      );
+
+
+      await loadTestimonials();
+
+    }
+
+
+    // ==============================
+    // DELETE
+    // ==============================
+
+    async function deleteTestimonial(
+      id
+    ) {
+
+      const confirmed =
+        confirm(
+          "Delete this testimonial permanently?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("testimonials")
+          .delete()
+          .eq(
+            "id",
+            id
+          );
+
+
+      if (error) {
+
+        console.error(
+          "Delete testimonial error:",
+          error
+        );
+
+        showMessage(
+          "Could not delete testimonial: " +
+          error.message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      showMessage(
+        "Testimonial deleted successfully."
+      );
+
+
+      await loadTestimonials();
+
+    }
+
+
+    // ==============================
+    // START
+    // ==============================
+
+    async function start() {
+
+      const allowed =
+        await checkAdmin();
+
+
+      if (!allowed) {
+        return;
+      }
+
+
+      await loadTestimonials();
+
+    }
+
+
+    start();
+
+  </script>
+
+</body>
+</html>
