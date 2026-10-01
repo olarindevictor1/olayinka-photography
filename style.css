@@ -1,0 +1,1285 @@
+/* =========================================================
+   OLAYINKA PHOTOGRAPHY — MAIN WEBSITE STYLES
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+  background: #faf9f6;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 6%;
+
+  background: rgba(15, 15, 15, 0.97);
+  backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.logo img {
+  display: block;
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.25s ease;
+}
+
+header nav a:hover {
+  color: #d4af37;
+}
+
+
+/* =========================================================
+   HAMBURGER
+========================================================= */
+
+.menu-toggle {
+  display: none;
+
+  border: none;
+  background: transparent;
+
+  color: #fff;
+
+  font-size: 30px;
+  line-height: 1;
+
+  padding: 5px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  min-height: 88vh;
+
+  display: flex;
+  align-items: center;
+
+  padding: 100px 7%;
+
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(212, 175, 55, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      115deg,
+      #080808 0%,
+      #171717 55%,
+      #29251d 100%
+    );
+
+  color: #fff;
+}
+
+.hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 800px;
+
+  right: -150px;
+  bottom: -180px;
+
+  border: 1px solid rgba(212, 175, 55, 0.25);
+
+  border-radius: 50%;
+}
+
+.hero-content {
+  max-width: 820px;
+
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+
+  color: #b99a3b;
+}
+
+.hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(48px, 10vw, 94px);
+
+  line-height: 0.96;
+
+  letter-spacing: -3px;
+
+  font-weight: 400;
+}
+
+.hero h1 em {
+  color: #d4af37;
+  font-style: italic;
+}
+
+.hero p:not(.eyebrow) {
+  max-width: 620px;
+
+  margin: 30px 0;
+
+  font-size: 17px;
+
+  color: #d9d5cd;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+  display: inline-block;
+
+  text-decoration: none;
+
+  padding: 13px 23px;
+
+  border-radius: 30px;
+
+  font-weight: 700;
+  font-size: 14px;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  background: #d4af37;
+  color: #111;
+}
+
+.primary:hover {
+  background: #e2c35c;
+}
+
+.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+
+.secondary:hover {
+  border-color: #d4af37;
+  color: #d4af37;
+}
+
+
+/* =========================================================
+   GENERAL SECTIONS
+========================================================= */
+
+.section {
+  padding: 100px 7%;
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 50px;
+}
+
+.section h2,
+.booking-cta h2 {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(36px, 6vw, 64px);
+
+  line-height: 1.03;
+
+  margin-bottom: 18px;
+
+  font-weight: 400;
+}
+
+.section h2 em,
+.booking-cta h2 em {
+  color: #b18d25;
+}
+
+.section-heading > p:last-child {
+  max-width: 650px;
+  color: #68645d;
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.intro {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 80px;
+
+  align-items: end;
+
+  background: #faf9f6;
+}
+
+.intro-copy {
+  font-size: 19px;
+  color: #555149;
+}
+
+.intro-copy p + p {
+  margin-top: 20px;
+}
+
+
+/* =========================================================
+   PORTFOLIO
+========================================================= */
+
+.portfolio-section {
+  background: #111;
+  color: #fff;
+}
+
+.portfolio-section .section-heading > p:last-child {
+  color: #aaa69e;
+}
+
+.portfolio-categories {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 28px;
+}
+
+
+/* =========================================================
+   PORTFOLIO CATEGORY CARDS
+========================================================= */
+
+.portfolio-category-card {
+  position: relative;
+
+  display: block;
+
+  height: 420px;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  text-decoration: none;
+
+  background: #222;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.28);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.portfolio-category-card .portfolio-image {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+}
+
+.portfolio-category-card .portfolio-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.5s ease;
+}
+
+.portfolio-category-card .portfolio-image::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.02) 25%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.78) 100%
+    );
+
+  pointer-events: none;
+}
+
+.portfolio-category-card:hover
+.portfolio-image img {
+  transform: scale(1.07);
+  filter: brightness(0.92);
+}
+
+.portfolio-category-card:hover {
+  transform: translateY(-4px);
+
+  border-color:
+    rgba(212, 175, 55, 0.65);
+}
+
+
+/* =========================================================
+   PORTFOLIO CARD TEXT
+========================================================= */
+
+.portfolio-info {
+  position: absolute;
+
+  z-index: 5;
+
+  left: 24px;
+  right: 24px;
+  bottom: 22px;
+
+  background: transparent;
+
+  color: #fff;
+
+  transition: transform 0.35s ease;
+}
+
+.portfolio-category-card:hover
+.portfolio-info {
+  transform: translateY(-5px);
+}
+
+.portfolio-info h3 {
+  margin: 0 0 3px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 30px;
+
+  line-height: 1.1;
+
+  font-weight: 400;
+
+  color: #fff;
+
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.portfolio-info span {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 12px;
+
+  letter-spacing: 1.5px;
+
+  text-shadow:
+    0 2px 7px rgba(0, 0, 0, 0.7);
+}
+
+
+/* =========================================================
+   PORTFOLIO GALLERY
+========================================================= */
+
+.portfolio-gallery-view {
+  display: none;
+}
+.featured-section {
+  margin-bottom: 55px;
+}
+
+.featured-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.featured-card {
+  position: relative;
+
+  height: 300px;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: #222;
+}
+
+.featured-card img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.6s
+    cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.featured-card:hover img {
+  transform: scale(1.05);
+}
+
+.featured-card-title {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 18px;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(0, 0, 0, 0.8)
+    );
+}
+.portfolio-gallery-view.active {
+  display: block;
+}
+
+.portfolio-categories.hidden {
+  display: none;
+}
+
+.gallery-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 45px;
+}
+
+.gallery-header h2 {
+  margin-bottom: 12px;
+}
+
+.gallery-header p:not(.eyebrow) {
+  color: #aaa69e;
+}
+
+.gallery-back {
+  flex-shrink: 0;
+
+  padding: 11px 19px;
+
+  border: 1px solid rgba(212, 175, 55, 0.55);
+
+  border-radius: 30px;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.gallery-back:hover {
+  background: #d4af37;
+  color: #111;
+  border-color: #d4af37;
+}
+
+.gallery-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.gallery-item {
+  position: relative;
+
+  height: 330px;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: #222;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  cursor: zoom-in;
+
+  transition:
+    transform 0.6s
+    cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
+.services-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 16px;
+}
+
+.service-card {
+  background: #faf9f6;
+
+  padding: 30px;
+
+  border: 1px solid #ddd6c9;
+
+  min-height: 250px;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #c4a43a;
+}
+
+.service-card span {
+  color: #b18d25;
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+}
+
+.service-card h3 {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 26px;
+
+  margin: 18px 0 12px;
+
+  font-weight: 400;
+}
+
+.service-card p {
+  color: #666159;
+
+  margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   BOOKING CTA
+========================================================= */
+
+.booking-cta {
+  background: #171717;
+  color: #fff;
+}
+
+.booking-cta > p:not(.eyebrow) {
+  color: #aaa69e;
+
+  max-width: 650px;
+
+  margin-bottom: 28px;
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 80px;
+
+  background: #faf9f6;
+}
+
+.about-image {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.about-image img {
+  width: 100%;
+
+  max-width: 430px;
+
+  height: 500px;
+
+  object-fit: cover;
+
+  border-radius: 14px;
+}
+
+.about-copy {
+  font-size: 18px;
+
+  color: #555149;
+}
+
+.about-copy p + p {
+  margin-top: 22px;
+}
+
+
+/* =========================================================
+   REASONS
+========================================================= */
+
+.reasons {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 35px;
+
+  border-top: 1px solid #ddd6c9;
+}
+
+.reason strong {
+  color: #b18d25;
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+}
+
+.reason h3 {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 29px;
+
+  margin: 14px 0;
+
+  font-weight: 400;
+}
+
+.reason p {
+  color: #666159;
+}
+
+
+/* =========================================================
+   TESTIMONIALS
+========================================================= */
+
+.testimonials {
+  background: #eeeae2;
+}
+
+.testimonials-grid {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 20px;
+}
+
+.testimonial-card {
+  padding: 35px;
+
+  background: #faf9f6;
+
+  border-left: 3px solid #d4af37;
+}
+
+.testimonial-card p {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 23px;
+
+  margin-bottom: 18px;
+}
+
+.testimonial-card strong {
+  font-size: 12px;
+
+  letter-spacing: 1px;
+
+  color: #8e7020;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact {
+  text-align: center;
+
+  background: #d4af37;
+
+  color: #111;
+}
+
+.contact .eyebrow {
+  color: #171717;
+}
+
+.contact h2 {
+  font-size:
+    clamp(42px, 7vw, 72px);
+}
+
+.contact > p:not(.eyebrow) {
+  max-width: 650px;
+
+  margin:
+    0 auto 28px;
+
+  color: #332d1e;
+}
+
+.contact .secondary {
+  border-color: #171717;
+  color: #171717;
+}
+
+
+/* =========================================================
+   CONTACT LINKS
+========================================================= */
+
+.contact-links {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.contact-link {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border: 1px solid rgba(23, 23, 23, 0.35);
+
+  border-radius: 30px;
+
+  text-decoration: none;
+
+  color: #171717;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.contact-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+  padding: 45px 7%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 25px;
+
+  flex-wrap: wrap;
+
+  background: #0c0c0c;
+
+  color: #fff;
+
+  font-size: 13px;
+}
+
+footer strong {
+  letter-spacing: 1.5px;
+}
+
+footer p {
+  color: #96928b;
+
+  margin-top: 6px;
+}
+
+footer a {
+  color: #d4af37;
+
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   PORTFOLIO IMAGE ZOOM VIEW
+========================================================= */
+
+.zoom-view {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  background: rgba(0, 0, 0, 0.94);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  touch-action: none;
+}
+
+.zoom-view img {
+  max-width: 90%;
+  max-height: 90%;
+
+  object-fit: contain;
+
+  cursor: grab;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+  transform:
+    translate(0, 0)
+    scale(1);
+
+  transition:
+    transform 0.15s ease;
+}
+
+.zoom-view img.dragging {
+  cursor: grabbing;
+
+  transition: none;
+}
+
+.zoom-close {
+  position: absolute;
+
+  top: 18px;
+  right: 22px;
+
+  z-index: 2;
+
+  width: 45px;
+  height: 45px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.12);
+
+  color: white;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease;
+}
+
+.zoom-close:hover {
+  background:
+    rgba(255, 255, 255, 0.22);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .portfolio-categories {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+  }
+
+  .portfolio-category-card {
+    height: 350px;
+  }
+
+  .gallery-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 760px) {
+
+  header {
+    padding: 15px 6%;
+  }
+
+  .logo img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  header nav {
+    display: none;
+
+    position: absolute;
+
+    top: 100%;
+
+    left: 0;
+    right: 0;
+
+    padding: 22px 7%;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    background: #101010;
+
+    border-bottom:
+      1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  header nav.menu-open {
+    display: flex;
+  }
+
+  header nav a {
+    width: 100%;
+  }
+
+  .hero {
+    min-height: 82vh;
+
+    padding: 75px 7%;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .hero p:not(.eyebrow) {
+    font-size: 16px;
+  }
+
+  .section {
+    padding: 75px 7%;
+  }
+
+  .intro,
+  .about,
+  .reasons {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .portfolio-categories {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .portfolio-category-card {
+    height: 330px;
+
+    border-radius: 14px;
+  }
+
+  .portfolio-info {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .portfolio-info h3 {
+    font-size: 24px;
+  }
+
+  .portfolio-info span {
+    font-size: 11px;
+  }
+
+  .gallery-header {
+    flex-direction: column;
+
+    gap: 22px;
+  }
+
+  .gallery-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+  }
+
+  .gallery-item {
+    height: 230px;
+
+    border-radius: 8px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-cta {
+    padding: 60px 7%;
+  }
+
+  .section h2 {
+    font-size: 42px;
+  }
+
+  .contact-links {
+    flex-direction: column;
+  }
+
+  .contact-link {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+
+  .logo {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+  }
+
+  .logo img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .menu-toggle {
+    font-size: 28px;
+  }
+
+  .portfolio-category-card {
+    height: 300px;
+  }
+
+  .portfolio-info h3 {
+    font-size: 22px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item {
+    height: 330px;
+  }
+
+}
