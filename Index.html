@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AI Assistant | Olayinka Photography</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #f5f1e8;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: #111;
+      border-bottom: 1px solid #292929;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      height: 44px;
+      width: auto;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: #d6b76c;
+      font-family: Georgia, serif;
+      font-size: 20px;
+    }
+
+    .back {
+      color: #d6b76c;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1150px;
+      margin: auto;
+      padding: 25px 18px 60px;
+    }
+
+    h2,
+    h3 {
+      color: #d6b76c;
+      font-family: Georgia, serif;
+    }
+
+    .intro {
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .section {
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .section-title h2 {
+      margin: 0;
+    }
+
+    /* =========================
+       AI CHAT
+    ========================= */
+
+    .assistant-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .assistant-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #292929;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+      border: 1px solid #3a3a3a;
+    }
+
+    .assistant-name {
+      margin: 0;
+      color: #d6b76c;
+      font-family: Georgia, serif;
+      font-size: 20px;
+    }
+
+    .assistant-status {
+      margin: 3px 0 0;
+      color: #8d8d8d;
+      font-size: 13px;
+    }
+
+    .chat-box {
+      height: 500px;
+      background: #0f0f0f;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    .welcome {
+      max-width: 720px;
+      margin: 30px auto;
+      text-align: center;
+      color: #aaa;
+      line-height: 1.7;
+    }
+
+    .welcome-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .welcome h3 {
+      margin: 0 0 10px;
+    }
+
+    .welcome p {
+      margin: 0;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .message-row.admin {
+      justify-content: flex-end;
+    }
+
+    .message-row.assistant {
+      justify-content: flex-start;
+    }
+
+    .chat-message {
+      max-width: 82%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .message-row.admin .chat-message {
+      background: #2a2416;
+      border: 1px solid #514321;
+      color: #f5f1e8;
+      border-bottom-right-radius: 3px;
+    }
+
+    .message-row.assistant .chat-message {
+      background: #181818;
+      border: 1px solid #292929;
+      color: #e4e4e4;
+      border-bottom-left-radius: 3px;
+    }
+
+    .message-label {
+      display: block;
+      font-size: 11px;
+      color: #d6b76c;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .typing {
+      color: #888;
+      font-style: italic;
+    }
+
+    .chat-input-area {
+      border-top: 1px solid #292929;
+      background: #141414;
+      padding: 12px;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #messageInput {
+      flex: 1;
+      min-height: 48px;
+      max-height: 130px;
+      resize: vertical;
+      border: 1px solid #333;
+      border-radius: 9px;
+      background: #0d0d0d;
+      color: #fff;
+      padding: 13px;
+      outline: none;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    #messageInput:focus {
+      border-color: #d6b76c;
+    }
+
+    #sendBtn {
+      background: #d6b76c;
+      color: #111;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 9px;
+    }
+
+    #sendBtn:hover {
+      opacity: 0.9;
+    }
+
+    #sendBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .chat-note {
+      color: #777;
+      font-size: 11px;
+      margin: 8px 2px 0;
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: #101010;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .label {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .value {
+      color: #d6b76c;
+      font-family: Georgia, serif;
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .info {
+      color: #aaa;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       CONVERSATIONS
+    ========================= */
+
+    .conversation {
+      background: #101010;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      padding: 17px;
+      margin-top: 14px;
+    }
+
+    .conversation h3 {
+      margin: 0 0 8px;
+    }
+
+    .meta {
+      color: #999;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .empty {
+      color: #888;
+      padding: 15px 0;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .secondary {
+      background: #292929;
+      color: #fff;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      background: #292929;
+      color: #d6b76c;
+      font-size: 12px;
+    }
+
+    .message {
+      color: #d6b76c;
+      min-height: 22px;
+      margin-top: 12px;
+    }
+
+    .error {
+      color: #ff8d8d;
+    }
+
+    /* =========================
+       FLOATING AI BUTTON
+    ========================= */
+
+    .ai-floating-button {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 1px solid #b99a5b;
+      background: #d6b76c;
+      color: #111;
+      font-size: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99998;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .ai-floating-button:hover {
+      transform: scale(1.05);
+    }
+
+    /* =========================
+       AI OVERLAY
+    ========================= */
+
+    .ai-assistant-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 99999;
+    }
+
+    /* =========================
+       AI BOX
+    ========================= */
+
+    .ai-assistant-box {
+      width: 420px;
+      max-width: 100%;
+      height: 560px;
+      max-height: 90vh;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =========================
+       AI HEADER
+    ========================= */
+
+    .ai-assistant-header {
+      min-height: 65px;
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid #292929;
+    }
+
+    .ai-assistant-header strong {
+      display: block;
+      color: #d6b76c;
+      font-size: 16px;
+    }
+
+    .ai-assistant-header small {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* =========================
+       CLOSE BUTTON
+    ========================= */
+
+    .ai-close-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: #292929;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .ai-close-btn:hover {
+      background: #3a3a3a;
+    }
+
+    /* =========================
+       AI MESSAGES
+    ========================= */
+
+    .ai-assistant-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #0b0b0b;
+    }
+
+    .ai-message {
+      padding: 11px 13px;
+      border-radius: 13px;
+      margin-bottom: 10px;
+      max-width: 85%;
+      line-height: 1.5;
+      font-size: 14px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .ai-message-bot {
+      background: #181818;
+      color: #eee;
+      border: 1px solid #292929;
+    }
+
+    .ai-message-user {
+      background: #2a2416;
+      color: #fff;
+      border: 1px solid #514321;
+      margin-left: auto;
+    }
+
+    /* =========================
+       AI INPUT
+    ========================= */
+
+    .ai-assistant-input {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      background: #141414;
+      border-top: 1px solid #292929;
+    }
+
+    .ai-assistant-input input {
+      flex: 1;
+      min-width: 0;
+      height: 42px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 0 12px;
+      outline: none;
+      font-size: 14px;
+      background: #0d0d0d;
+      color: white;
+    }
+
+    .ai-assistant-input input:focus {
+      border-color: #d6b76c;
+    }
+
+    .ai-assistant-input button {
+      height: 42px;
+      border: none;
+      border-radius: 10px;
+      padding: 0 16px;
+      background: #d6b76c;
+      color: #111;
+      cursor: pointer;
+    }
+
+    .ai-assistant-input button:disabled {
+      opacity: 0.6;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 750px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .chat-message {
+        max-width: 90%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 14px;
+      }
+
+      .brand img {
+        height: 38px;
+      }
+
+      .brand h1 {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px 12px 45px;
+      }
+
+      .section {
+        padding: 16px;
+      }
+
+      .chat-box {
+        height: 520px;
+      }
+
+      .chat-form {
+        align-items: stretch;
+      }
+
+      #sendBtn {
+        padding: 0 15px;
+      }
+
+      .chat-message {
+        max-width: 94%;
+      }
+
+      .ai-floating-button {
+        right: 15px;
+        bottom: 15px;
+        width: 55px;
+        height: 55px;
+      }
+
+      .ai-assistant-overlay {
+        padding: 10px;
+      }
+
+      .ai-assistant-box {
+        width: 100%;
+        height: 85vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="brand">
+
+    <img
+      src="https://qgaqdnlqftlazzqxykia.supabase.co/storage/v1/object/public/site-assets/logo/IMG-20260924-WA0031.jpg"
+      alt="OLAYINKA PHOTOGRAPHY"
+    >
+
+    <h1>AI Assistant</h1>
+
+  </div>
+
+  <a
+    class="back"
+    href="../dashboard/index.html"
+  >
+    ← Dashboard
+  </a>
+
+</header>
+
+
+<main>
+
+  <h2>AI Business Assistant</h2>
+
+  <p class="intro">
+    Use the private AI assistant to understand and manage
+    OLAYINKA PHOTOGRAPHY business information.
+  </p>
+
+
+  <!-- =========================
+       AI CHAT
+  ========================== -->
+
+  <section class="section">
+
+    <div class="assistant-header">
+
+      <div class="assistant-icon">
+        🤖
+      </div>
+
+      <div>
+
+        <h2 class="assistant-name">
+          Olayinka AI
+        </h2>
+
+        <p class="assistant-status">
+          Private Admin Business Assistant
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="chat-box">
+
+      <div
+        class="chat-messages"
+        id="chatMessages"
+      >
+
+        <div
+          class="welcome"
+          id="welcomeMessage"
+        >
+
+          <div class="welcome-icon">
+            🤖
+          </div>
+
+          <h3>
+            Welcome to your AI Business Assistant
+          </h3>
+
+          <p>
+            Ask about bookings, customers, payments,
+            services, packages, portfolio or general
+            business activity.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="chat-input-area">
+
+        <form
+          class="chat-form"
+          id="chatForm"
+        >
+
+          <textarea
+            id="messageInput"
+            placeholder="Ask your business assistant..."
+            autocomplete="off"
+            rows="1"
+          ></textarea>
+
+          <button
+            id="sendBtn"
+            type="submit"
+          >
+            Send
+          </button>
+
+        </form>
+
+        <div class="chat-note">
+          AI responses are based on information available
+          in the OLAYINKA PHOTOGRAPHY database.
+        </div>
+
+      </div>
+
+    </div>
+
+    <div
+      class="message"
+      id="chatStatus"
+    ></div>
+
+  </section>
+
+
+  <!-- =========================
+       AI OVERVIEW
+  ========================== -->
+
+  <section class="section">
+
+    <div class="section-title">
+
+      <h2>AI Overview</h2>
+
+      <button
+        class="secondary"
+        id="refreshBtn"
+        type="button"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+
+    <div class="stats">
+
+      <div class="card">
+
+        <div class="label">
+          AI Conversations
+        </div>
+
+        <div
+          class="value"
+          id="conversationCount"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          AI Messages
+        </div>
+
+        <div
+          class="value"
+          id="messageCount"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          Active Conversations
+        </div>
+
+        <div
+          class="value"
+          id="activeCount"
+        >
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+    <div
+      class="message"
+      id="pageMessage"
+    ></div>
+
+  </section>
+
+
+  <!-- =========================
+       AI INFORMATION
+  ========================== -->
+
+  <section class="section">
+
+    <h2>AI System</h2>
+
+    <p class="info">
+      The AI assistant can use the business information
+      stored in Supabase to help the administrator
+      understand the photography business.
+    </p>
+
+    <p class="info">
+      Customer conversations and admin conversations are
+      stored separately by conversation mode.
+    </p>
+
+    <p class="info">
+      Private business information is only supplied to the
+      AI when an authenticated administrator uses the admin
+      assistant.
+    </p>
+
+  </section>
+
+
+  <!-- =========================
+       RECENT CONVERSATIONS
+  ========================== -->
+
+  <section class="section">
+
+    <div class="section-title">
+
+      <h2>Recent AI Conversations</h2>
+
+    </div>
+
+    <div id="conversationList">
+
+      <div class="empty">
+        Loading conversations...
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- ==============================
+     FLOATING AI BUTTON
+================================ -->
+
+<button
+  type="button"
+  class="ai-floating-button"
+  onclick="openAIAssistant()"
+  aria-label="Open Olayinka AI Assistant"
+>
+  🤖
+</button>
+
+
+<!-- ==============================
+     AI ASSISTANT OVERLAY
+================================ -->
+
+<div
+  id="aiAssistantOverlay"
+  class="ai-assistant-overlay"
+>
+
+  <div class="ai-assistant-box">
+
+    <div class="ai-assistant-header">
+
+      <div>
+
+        <strong>
+          🤖 OLAYINKA AI Assistant
+        </strong>
+
+        <small>
+          Private Business Assistant
+        </small>
+
+      </div>
+
+      <button
+        type="button"
+        class="ai-close-btn"
+        onclick="closeAIAssistant()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="aiAssistantMessages"
+      class="ai-assistant-messages"
+    >
+
+      <div class="ai-message ai-message-bot">
+        Hello! I'm your OLAYINKA PHOTOGRAPHY business assistant. How can I help you today?
+      </div>
+
+    </div>
+
+
+    <div class="ai-assistant-input">
+
+      <input
+        id="aiAssistantInput"
+        type="text"
+        placeholder="Ask your business assistant..."
+        autocomplete="off"
+        onkeydown="if(event.key === 'Enter') { event.preventDefault(); sendAIMessage(); }"
+      >
+
+      <button
+        id="aiSendButton"
+        type="button"
+        onclick="sendAIMessage()"
+      >
+        Send
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  // @ts-nocheck
+
+  const SUPABASE_URL =
+    "https://qgaqdnlqftlazzqxykia.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_3ZomhHBPqFeZUw7C6RNEfg_EBP4OwvH";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  /* =========================
+     CURRENT CONVERSATION
+  ========================= */
+
+  let currentConversationId = null;
+
+  let sending = false;
+
+
+  /* =========================
+     ADMIN CHECK
+  ========================= */
+
+  async function checkAdmin() {
+
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
+
+
+    if (userError || !user) {
+
+      window.location.href =
+        "../../login.html";
+
+      return false;
+    }
+
+
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+
+    if (
+      profileError ||
+      !profile ||
+      profile.role !== "admin"
+    ) {
+
+      window.location.href =
+        "../../login.html";
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* =========================
+     ESCAPE HTML
+  ========================= */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =========================
+     FORMAT MESSAGE
+  ========================= */
+
+  function formatMessage(value) {
+
+    return escapeHtml(value)
+      .replace(/\n/g, "<br>");
+  }
+
+
+  /* =========================
+     ADD MAIN CHAT MESSAGE
+  ========================= */
+
+  function addChatMessage(
+    type,
+    message
+  ) {
+
+    const chatMessages =
+      document.getElementById(
+        "chatMessages"
+      );
+
+
+    const welcome =
+      document.getElementById(
+        "welcomeMessage"
+      );
+
+
+    if (welcome) {
+      welcome.remove();
+    }
+
+
+    const row =
+      document.createElement("div");
+
+
+    row.className =
+      "message-row " +
+      (
+        type === "admin"
+          ? "admin"
+          : "assistant"
+      );
+
+
+    const bubble =
+      document.createElement("div");
+
+
+    bubble.className =
+      "chat-message";
+
+
+    const label =
+      type === "admin"
+        ? "You"
+        : "Olayinka AI";
+
+
+    bubble.innerHTML = `
+      <span class="message-label">
+        ${label}
+      </span>
+
+      <div>
+        ${formatMessage(message)}
+      </div>
+    `;
+
+
+    row.appendChild(bubble);
+
+    chatMessages.appendChild(row);
+
+    chatMessages.scrollTop =
+      chatMessages.scrollHeight;
+  }
+
+
+  /* =========================
+     TYPING MESSAGE
+  ========================= */
+
+  function showTyping() {
+
+    const chatMessages =
+      document.getElementById(
+        "chatMessages"
+      );
+
+
+    const row =
+      document.createElement("div");
+
+
+    row.id =
+      "typingMessage";
+
+
+    row.className =
+      "message-row assistant";
+
+
+    row.innerHTML = `
+      <div class="chat-message typing">
+        <span class="message-label">
+          Olayinka AI
+        </span>
+
+        Thinking...
+      </div>
+    `;
+
+
+    chatMessages.appendChild(row);
+
+    chatMessages.scrollTop =
+      chatMessages.scrollHeight;
+  }
+
+
+  /* =========================
+     REMOVE TYPING
+  ========================= */
+
+  function removeTyping() {
+
+    const typing =
+      document.getElementById(
+        "typingMessage"
+      );
+
+
+    if (typing) {
+      typing.remove();
+    }
+  }
+
+
+  /* =========================
+     SEND MAIN CHAT MESSAGE
+  ========================= */
+
+  async function sendMessage() {
+
+    if (sending) {
+      return;
+    }
+
+
+    const input =
+      document.getElementById(
+        "messageInput"
+      );
+
+
+    const sendBtn =
+      document.getElementById(
+        "sendBtn"
+      );
+
+
+    const status =
+      document.getElementById(
+        "chatStatus"
+      );
+
+
+    const message =
+      input.value.trim();
+
+
+    if (!message) {
+
+      status.textContent =
+        "Please enter a message.";
+
+      status.className =
+        "message error";
+
+      return;
+    }
+
+
+    sending = true;
+
+    sendBtn.disabled = true;
+
+    sendBtn.textContent =
+      "Sending...";
+
+    status.textContent = "";
+
+    status.className =
+      "message";
+
+
+    addChatMessage(
+      "admin",
+      message
+    );
+
+
+    input.value = "";
+
+    input.style.height =
+      "48px";
+
+
+    showTyping();
+
+
+    try {
+
+      const {
+        data,
+        error
+      } =
+      await supabaseClient.functions.invoke(
+        "ai-assistant",
+        {
+          body: {
+            mode: "admin",
+            message: message,
+            conversation_id:
+              currentConversationId
+          }
+        }
+      );
+
+
+      removeTyping();
+
+
+      if (error) {
+
+        console.error(
+          "AI function error:",
+          error
+        );
+
+        throw new Error(
+          error.message ||
+          "AI request failed."
+        );
+      }
+
+
+      if (!data) {
+
+        throw new Error(
+          "No response was received from the AI."
+        );
+      }
+
+
+      if (data.error) {
+
+        throw new Error(
+          data.error
+        );
+      }
+
+
+      if (
+        data.conversation_id
+      ) {
+
+        currentConversationId =
+          data.conversation_id;
+      }
+
+
+      if (!data.answer) {
+
+        throw new Error(
+          "The AI returned an empty response."
+        );
+      }
+
+
+      addChatMessage(
+        "assistant",
+        data.answer
+      );
+
+
+      status.textContent =
+        "AI response received.";
+
+      status.className =
+        "message";
+
+
+      await loadConversations();
+
+    } catch (error) {
+
+      removeTyping();
+
+
+      console.error(
+        "AI error:",
+        error
+      );
+
+
+      addChatMessage(
+        "assistant",
+        "Sorry, I could not process that request right now."
+      );
+
+
+      status.textContent =
+        error.message ||
+        "Something went wrong while contacting the AI.";
+
+      status.className =
+        "message error";
+
+    } finally {
+
+      sending = false;
+
+      sendBtn.disabled = false;
+
+      sendBtn.textContent =
+        "Send";
+
+      input.focus();
+    }
+  }
+
+
+  /* =========================
+     LOAD CONVERSATION
+  ========================= */
+
+  async function loadConversationMessages(
+    conversationId
+  ) {
+
+    if (!conversationId) {
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("ai_messages")
+        .select(
+          "sender_type,message,created_at"
+        )
+        .eq(
+          "conversation_id",
+          conversationId
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Conversation messages error:",
+        error
+      );
+
+      return;
+    }
+
+
+    const chatMessages =
+      document.getElementById(
+        "chatMessages"
+      );
+
+
+    chatMessages.innerHTML = "";
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      chatMessages.innerHTML = `
+        <div class="welcome">
+          <div class="welcome-icon">
+            🤖
+          </div>
+
+          <h3>
+            AI Business Assistant
+          </h3>
+
+          <p>
+            Start a new conversation.
+          </p>
+        </div>
+      `;
+
+      return;
+    }
+
+
+    data.forEach(item => {
+
+      let type = "assistant";
+
+
+      if (
+        item.sender_type === "admin"
+      ) {
+
+        type = "admin";
+
+      } else if (
+        item.sender_type === "customer"
+      ) {
+
+        type = "admin";
+      }
+
+
+      addChatMessage(
+        type,
+        item.message
+      );
+
+    });
+  }
+
+
+  /* =========================
+     LOAD CONVERSATIONS
+  ========================= */
+
+  async function loadConversations() {
+
+    const list =
+      document.getElementById(
+        "conversationList"
+      );
+
+
+    const pageMessage =
+      document.getElementById(
+        "pageMessage"
+      );
+
+
+    list.innerHTML =
+      '<div class="empty">Loading conversations...</div>';
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("ai_conversations")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(50);
+
+
+    if (error) {
+
+      console.error(
+        "AI conversations error:",
+        error
+      );
+
+
+      list.innerHTML =
+        '<div class="empty">AI conversations could not be loaded yet.</div>';
+
+
+      pageMessage.textContent =
+        "AI conversation data is not available yet.";
+
+
+      document.getElementById(
+        "conversationCount"
+      ).textContent =
+        "0";
+
+
+      document.getElementById(
+        "activeCount"
+      ).textContent =
+        "0";
+
+
+      await loadMessageCount();
+
+      return;
+    }
+
+
+    const conversations =
+      data || [];
+
+
+    document.getElementById(
+      "conversationCount"
+    ).textContent =
+      conversations.length;
+
+
+    const active =
+      conversations.filter(
+        item =>
+          item.status === "active" ||
+          item.status === "open" ||
+          item.is_active === true
+      ).length;
+
+
+    document.getElementById(
+      "activeCount"
+    ).textContent =
+      active;
+
+
+    if (
+      conversations.length === 0
+    ) {
+
+      list.innerHTML =
+        '<div class="empty">No AI conversations yet.</div>';
+
+    } else {
+
+      list.innerHTML = "";
+
+
+      conversations.forEach(
+        conversation => {
+
+          const box =
+            document.createElement(
+              "div"
+            );
+
+
+          box.className =
+            "conversation";
+
+
+          const title =
+            conversation.title ||
+            conversation.subject ||
+            "AI Conversation";
+
+
+          const status =
+            conversation.status ||
+            (
+              conversation.is_active
+                ? "active"
+                : "closed"
+            );
+
+
+          const created =
+            conversation.created_at
+              ? new Date(
+                  conversation.created_at
+                ).toLocaleString()
+              : "—";
+
+
+          box.innerHTML = `
+
+            <h3>
+              ${escapeHtml(title)}
+            </h3>
+
+            <div class="meta">
+
+              ID:
+              ${escapeHtml(
+                conversation.id
+              )}
+
+              <br>
+
+              Status:
+              <span class="status">
+                ${escapeHtml(status)}
+              </span>
+
+              <br>
+
+              Created:
+              ${escapeHtml(created)}
+
+            </div>
+
+            <br>
+
+            <button
+              class="secondary"
+              type="button"
+            >
+              Open Conversation
+            </button>
+
+          `;
+
+
+          const openButton =
+            box.querySelector(
+              "button"
+            );
+
+
+          openButton.addEventListener(
+            "click",
+            async () => {
+
+              currentConversationId =
+                conversation.id;
+
+
+              await loadConversationMessages(
+                conversation.id
+              );
+
+
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+              });
+
+            }
+          );
+
+
+          list.appendChild(box);
+
+        }
+      );
+    }
+
+
+    await loadMessageCount();
+
+
+    pageMessage.textContent =
+      "AI information updated.";
+  }
+
+
+  /* =========================
+     LOAD MESSAGE COUNT
+  ========================= */
+
+  async function loadMessageCount() {
+
+    const {
+      count,
+      error
+    } =
+      await supabaseClient
+        .from("ai_messages")
+        .select(
+          "id",
+          {
+            count: "exact",
+            head: true
+          }
+        );
+
+
+    if (error) {
+
+      document.getElementById(
+        "messageCount"
+      ).textContent =
+        "0";
+
+      return;
+    }
+
+
+    document.getElementById(
+      "messageCount"
+    ).textContent =
+      count || 0;
+  }
+
+
+  /* =========================
+     TEXTAREA AUTO RESIZE
+  ========================= */
+
+  document
+    .getElementById(
+      "messageInput"
+    )
+    .addEventListener(
+      "input",
+      function () {
+
+        this.style.height =
+          "48px";
+
+        this.style.height =
+          Math.min(
+            this.scrollHeight,
+            130
+          ) + "px";
+
+      }
+    );
+
+
+  /* =========================
+     ENTER TO SEND
+  ========================= */
+
+  document
+    .getElementById(
+      "messageInput"
+    )
+    .addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key === "Enter" &&
+          !event.shiftKey
+        ) {
+
+          event.preventDefault();
+
+          sendMessage();
+        }
+
+      }
+    );
+
+
+  /* =========================
+     CHAT FORM
+  ========================= */
+
+  document
+    .getElementById(
+      "chatForm"
+    )
+    .addEventListener(
+      "submit",
+      function (event) {
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+    );
+
+
+  /* =========================
+     REFRESH
+  ========================= */
+
+  document
+    .getElementById(
+      "refreshBtn"
+    )
+    .addEventListener(
+      "click",
+      loadConversations
+    );
+
+
+  /* =========================
+     OPEN FLOATING AI
+  ========================= */
+
+  function openAIAssistant() {
+
+    const overlay =
+      document.getElementById(
+        "aiAssistantOverlay"
+      );
+
+
+    if (overlay) {
+
+      overlay.style.display =
+        "flex";
+
+
+      const input =
+        document.getElementById(
+          "aiAssistantInput"
+        );
+
+
+      if (input) {
+        setTimeout(() => input.focus(), 100);
+      }
+
+    }
+  }
+
+
+  /* =========================
+     CLOSE FLOATING AI
+  ========================= */
+
+  function closeAIAssistant() {
+
+    const overlay =
+      document.getElementById(
+        "aiAssistantOverlay"
+      );
+
+
+    if (overlay) {
+
+      overlay.style.display =
+        "none";
+
+    }
+  }
+
+
+  /* =========================
+     SEND FLOATING AI MESSAGE
+  ========================= */
+
+  async function sendAIMessage() {
+
+    const input =
+      document.getElementById(
+        "aiAssistantInput"
+      );
+
+
+    const messages =
+      document.getElementById(
+        "aiAssistantMessages"
+      );
+
+
+    const sendButton =
+      document.getElementById(
+        "aiSendButton"
+      );
+
+
+    if (
+      !input ||
+      !messages ||
+      !sendButton
+    ) {
+
+      return;
+    }
+
+
+    const message =
+      input.value.trim();
+
+
+    if (!message) {
+      return;
+    }
+
+
+    /* USER MESSAGE */
+
+    const userMessage =
+      document.createElement(
+        "div"
+      );
+
+
+    userMessage.className =
+      "ai-message ai-message-user";
+
+
+    userMessage.textContent =
+      message;
+
+
+    messages.appendChild(
+      userMessage
+    );
+
+
+    input.value = "";
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+
+    sendButton.disabled =
+      true;
+
+
+    sendButton.textContent =
+      "Thinking...";
+
+
+    try {
+
+      const {
+        data,
+        error
+      } =
+      await supabaseClient.functions.invoke(
+        "ai-assistant",
+        {
+          body: {
+            mode: "admin",
+            message: message,
+            conversation_id:
+              currentConversationId
+          }
+        }
+      );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (
+        data &&
+        data.error
+      ) {
+
+        throw new Error(
+          data.error
+        );
+      }
+
+
+      if (
+        data &&
+        data.conversation_id
+      ) {
+
+        currentConversationId =
+          data.conversation_id;
+      }
+
+
+      const botMessage =
+        document.createElement(
+          "div"
+        );
+
+
+      botMessage.className =
+        "ai-message ai-message-bot";
+
+
+      botMessage.textContent =
+        data?.answer ||
+        "I couldn't generate a response.";
+
+
+      messages.appendChild(
+        botMessage
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "AI Assistant Error:",
+        error
+      );
+
+
+      const errorMessage =
+        document.createElement(
+          "div"
+        );
+
+
+      errorMessage.className =
+        "ai-message ai-message-bot";
+
+
+      errorMessage.textContent =
+        "Sorry, I couldn't connect to the AI assistant. Please try again.";
+
+
+      messages.appendChild(
+        errorMessage
+      );
+
+    }
+
+
+    sendButton.disabled =
+      false;
+
+
+    sendButton.textContent =
+      "Send";
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+  }
+
+
+  /* =========================
+     START ADMIN PAGE
+  ========================= */
+
+  (async function () {
+
+    const allowed =
+      await checkAdmin();
+
+
+    if (!allowed) {
+      return;
+    }
+
+
+    await loadConversations();
+
+  })();
+
+</script>
+
+</body>
+</html>
